@@ -9,6 +9,7 @@ import com.imooc.util.DateUtil;
 import com.imooc.util.MD5Utils;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Users createUser(UserBO userBO) {
+    public Users createUser(UserBO userBO) throws Exception {
         Users user = new Users();
         user.setId(sid.nextId());
         user.setUsername(userBO.getUsername());
@@ -58,5 +59,15 @@ public class UserServiceImpl implements UserService {
 
         usersMapper.insert(user);
         return user;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public Users queryUserForLogin(String username, String password) {
+        Example userExample = new Example(Users.class);
+        Example.Criteria criteria = userExample.createCriteria();
+        criteria.andEqualTo("username", username);
+        criteria.andEqualTo("password", password);
+        return usersMapper.selectOneByExample(userExample);
     }
 }

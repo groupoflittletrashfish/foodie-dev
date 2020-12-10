@@ -12,5 +12,7 @@ public interface UserService {
 
     boolean queryUsernameIsExist(String username);
 
-    Users createUser(UserBO user);
+    Users createUser(UserBO user) throws Exception;
+
+    public Users queryUserForLogin(String username, String password);
 }
