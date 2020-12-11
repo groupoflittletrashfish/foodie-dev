@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imooc.mapper.CategoryMapperCustom">
+
+    <resultMap id="myCategotyVO" type="com.imooc.pojo.vo.CategoryVO">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="father_id" property="fatherId" jdbcType="INTEGER"/>
+        <collection property="subCatList" ofType="com.imooc.pojo.vo.SubCategoryVO">
+            <id column="subId" property="subId" jdbcType="INTEGER"/>
+            <result column="subName" property="subName" jdbcType="VARCHAR"/>
+            <result column="subType" property="subType" jdbcType="INTEGER"/>
+            <result column="subFatherId" property="subFatherId" jdbcType="INTEGER"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="getSubCatList" resultMap="myCategotyVO" parameterType="int">
+        SELECT
+            f.id,
+            f.`name`,
+            f.type,
+            f.father_id,
+            c.id        subId,
+            c.`name`    subName,
+            c.type      subType,
+            c.father_id subFatherId
+        FROM
+            category f
+            JOIN category c ON f.id = c.father_id
+        WHERE
+            f.father_id = #{rootCatId}
+    </select>
+</mapper>

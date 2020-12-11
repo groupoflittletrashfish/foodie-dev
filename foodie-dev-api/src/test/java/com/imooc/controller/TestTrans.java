@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 public class TestTrans {
 
     @Resource
-    private com.imooc.impl.TestTrans testTrans;
+    private com.imooc.service.impl.TestTrans testTrans;
 
     @Test
     public void testRequired() throws Exception {

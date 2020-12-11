@@ -1,6 +1,6 @@
 package com.imooc.controller;
 
-import com.imooc.bo.UserBO;
+import com.imooc.pojo.bo.UserBO;
 import com.imooc.common.IMOOCJSONResult;
 import com.imooc.pojo.Users;
 import com.imooc.service.UserService;
@@ -94,6 +94,16 @@ public class PassportController {
         //设置Cookie
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
         return IMOOCJSONResult.of(users);
+    }
+
+
+    @ApiOperation(value = "用户退出登录", notes = "用户退出登录 ", httpMethod = "POST")
+    @PostMapping("/logout")
+    public IMOOCJSONResult logout(@RequestParam String userId, HttpServletRequest request, HttpServletResponse response) {
+        //清除用户信息
+        CookieUtils.deleteCookie(request, response, "user");
+
+        return IMOOCJSONResult.ok();
     }
 
 

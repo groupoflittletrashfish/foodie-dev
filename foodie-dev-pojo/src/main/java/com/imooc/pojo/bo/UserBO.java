@@ -1,4 +1,4 @@
-package com.imooc.bo;
+package com.imooc.pojo.bo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

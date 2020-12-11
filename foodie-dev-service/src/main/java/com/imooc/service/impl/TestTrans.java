@@ -1,4 +1,4 @@
-package com.imooc.impl;
+package com.imooc.service.impl;
 
 import com.imooc.service.HelloService;
 import org.springframework.stereotype.Service;
