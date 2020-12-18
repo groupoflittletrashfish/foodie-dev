@@ -1,8 +1,8 @@
 package com.imooc.controller;
 
-import com.imooc.pojo.bo.UserBO;
 import com.imooc.common.IMOOCJSONResult;
 import com.imooc.pojo.Users;
+import com.imooc.pojo.bo.UserBO;
 import com.imooc.service.UserService;
 import com.imooc.util.CookieUtils;
 import com.imooc.util.JsonUtils;
@@ -40,13 +40,13 @@ public class PassportController {
     @GetMapping("/usernameIsExist")
     public IMOOCJSONResult usernameIsExist(@RequestParam String username) {
         if (StringUtils.isBlank(username)) {
-            return IMOOCJSONResult.error("用户名不能为空");
+            return IMOOCJSONResult.errorMsg("用户名不能为空");
         }
         boolean isExist = userService.queryUsernameIsExist(username);
         if (isExist) {
-            return IMOOCJSONResult.error("用户名已经存在");
+            return IMOOCJSONResult.errorMsg("用户名已经存在");
         }
-        return IMOOCJSONResult.of(isExist);
+        return IMOOCJSONResult.ok(isExist);
     }
 
     /**
@@ -59,22 +59,22 @@ public class PassportController {
     @PostMapping("regist")
     public IMOOCJSONResult regist(@RequestBody UserBO userBO, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (StringUtils.isBlank(userBO.getUsername()) || StringUtils.isBlank(userBO.getPassword()) || StringUtils.isBlank(userBO.getConfirmPassword())) {
-            return IMOOCJSONResult.error("用户名或者密码不能为空");
+            return IMOOCJSONResult.errorMsg("用户名或者密码不能为空");
         }
         if (userService.queryUsernameIsExist(userBO.getUsername())) {
-            return IMOOCJSONResult.error("用户名已经存在");
+            return IMOOCJSONResult.errorMsg("用户名已经存在");
         }
         if (userBO.getPassword().length() < 6) {
-            return IMOOCJSONResult.error("密码长度不能小于6");
+            return IMOOCJSONResult.errorMsg("密码长度不能小于6");
         }
         if (!StringUtils.equals(userBO.getPassword(), userBO.getConfirmPassword())) {
-            return IMOOCJSONResult.error("两次密码不一致");
+            return IMOOCJSONResult.errorMsg("两次密码不一致");
         }
         Users users = userService.createUser(userBO);
         users = setNull(users);
         //设置Cookie
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
-        return IMOOCJSONResult.of(users);
+        return IMOOCJSONResult.ok(users);
     }
 
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
@@ -84,16 +84,16 @@ public class PassportController {
         String password = userBO.getPassword();
 
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
-            return IMOOCJSONResult.error("用户名或密码不能为空");
+            return IMOOCJSONResult.errorMsg("用户名或密码不能为空");
         }
         Users users = userService.queryUserForLogin(username, MD5Utils.getMD5Str(password));
         if (Objects.isNull(users)) {
-            return IMOOCJSONResult.error("用户名或密码不正确");
+            return IMOOCJSONResult.errorMsg("用户名或密码不正确");
         }
         users = setNull(users);
         //设置Cookie
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
-        return IMOOCJSONResult.of(users);
+        return IMOOCJSONResult.ok(users);
     }
 
 

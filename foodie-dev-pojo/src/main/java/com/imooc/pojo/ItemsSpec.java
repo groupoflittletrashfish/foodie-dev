@@ -1,8 +1,8 @@
 package com.imooc.pojo;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "items_spec")
 public class ItemsSpec {

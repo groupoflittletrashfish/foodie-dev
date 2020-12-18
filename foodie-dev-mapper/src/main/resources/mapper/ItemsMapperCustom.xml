@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imooc.mapper.ItemsMapperCustom">
+    <resultMap id="BaseResultMap" type="com.imooc.pojo.Items">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="cat_id" property="catId" jdbcType="INTEGER"/>
+        <result column="root_cat_id" property="rootCatId" jdbcType="INTEGER"/>
+        <result column="sell_counts" property="sellCounts" jdbcType="INTEGER"/>
+        <result column="on_off_status" property="onOffStatus" jdbcType="INTEGER"/>
+        <result column="created_time" property="createdTime" jdbcType="TIMESTAMP"/>
+        <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP"/>
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
+
+    <select id="queryItemComments" resultType="com.imooc.pojo.vo.ItemCommentVO">
+        SELECT
+        ic.comment_level commentLevel,
+        ic.content content,
+        ic.sepc_name sepcName,
+        ic.created_time createTime,
+        u.face userFace,
+        u.nickname nickname
+        FROM items_comments ic
+        LEFT JOIN users u
+        ON ic.user_id = u.id
+        WHERE ic.item_id = #{paramsMap.itemId}
+        <if test="paramsMap.level != null and paramsMap.level != '' ">
+            AND ic.comment_level = #{paramsMap.level}
+        </if>
+    </select>
+
+    <select id="searchItems" resultType="com.imooc.pojo.vo.SearchItemsVO">
+        SELECT
+            i.id itemId,
+            i.item_name itemName,
+            i.sell_counts sellCounts,
+            ii.url imgUrl,
+            tempSpec.price_discount price
+        FROM
+            items i
+        LEFT JOIN items_img ii ON i.id = ii.item_id
+        LEFT JOIN (
+            SELECT
+                item_id,
+                MIN(price_discount) price_discount
+            FROM
+                items_spec
+            GROUP BY
+                item_id
+        )	tempSpec
+        ON i.id = tempSpec.item_id
+        WHERE
+            ii.is_main = 1
+            <if test="paramsMap.keywords != null and paramsMap.keywords !='' ">
+                AND i.item_name LIKE CONCAT('%' , #{paramsMap.keywords}, '%')
+            </if>
+        ORDER BY
+        --                 k:默认排序
+        --                 c:根据销量排序
+        --                 p:根据价格排序
+            <choose>
+                <when test="paramsMap.sort == &quot;c&quot;">
+                    i.sell_counts DESC
+                </when>
+                <when test="paramsMap.sort == &quot;p&quot; ">
+                    tempSpec.price_discount ASC
+                </when>
+                <otherwise>
+                    i.item_name ASC
+                </otherwise>
+            </choose>
+    </select>
+
+
+    <select id="searchItemsByThirdCat" resultType="com.imooc.pojo.vo.SearchItemsVO">
+        SELECT
+        i.id itemId,
+        i.item_name itemName,
+        i.sell_counts sellCounts,
+        ii.url imgUrl,
+        tempSpec.price_discount price
+        FROM
+        items i
+        LEFT JOIN items_img ii ON i.id = ii.item_id
+        LEFT JOIN (
+        SELECT
+        item_id,
+        MIN(price_discount) price_discount
+        FROM
+        items_spec
+        GROUP BY
+        item_id
+        )	tempSpec
+        ON i.id = tempSpec.item_id
+        WHERE
+        ii.is_main = 1
+        AND I.cat_id = #{paramsMap.catId}
+        ORDER BY
+        --                 k:默认排序
+        --                 c:根据销量排序
+        --                 p:根据价格排序
+        <choose>
+            <when test="paramsMap.sort == &quot;c&quot;">
+                i.sell_counts DESC
+            </when>
+            <when test="paramsMap.sort == &quot;p&quot; ">
+                tempSpec.price_discount ASC
+            </when>
+            <otherwise>
+                i.item_name ASC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="queryItemsBySpecIds" resultType="com.imooc.pojo.vo.ShopCartVO">
+        SELECT
+            t_items.id itemId,
+            t_items.item_name itemName,
+            t_items_img.url itemImgUrl,
+            t_items_spec.id specId,
+            t_items_spec.`name` specName,
+            t_items_spec.price_discount priceDiscount,
+            t_items_spec.price_normal priceNormal
+        FROM
+            items_spec t_items_spec
+        LEFT JOIN items t_items ON t_items.id = t_items_spec.item_id
+        LEFT JOIN items_img t_items_img ON t_items_img.item_id = t_items.id
+        WHERE
+            t_items_img.is_main = 1
+        AND t_items_spec.id IN
+        <foreach collection="paramsList" index = "index" item="specId" open="(" close=")" separator=",">
+            #{specId}
+        </foreach>
+    </select>
+
+
+</mapper>

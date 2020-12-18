@@ -29,3 +29,6 @@ mapper:
   mappers: com.imooc.my.mapper.MyMapper
   not-empty: false
   identity: MYSQL
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true

@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Users createUser(UserBO userBO) throws Exception {
         Users user = new Users();
-        user.setId(sid.nextId());
+        user.setId(sid.nextShort());
         user.setUsername(userBO.getUsername());
         user.setPassword(MD5Utils.getMD5Str(userBO.getPassword()));
         user.setNickname(userBO.getUsername());
