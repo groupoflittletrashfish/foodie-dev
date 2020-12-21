@@ -22,4 +22,40 @@ public interface AddressService {
      */
     public void addNewUserAdress(AddressBO addressBO);
 
+
+    /**
+     * 用户修改地址
+     *
+     * @param addressBO
+     */
+    public void updateUserAddress(AddressBO addressBO);
+
+
+    /**
+     * 根据用户ID和地址ID删除地址
+     *
+     * @param userId
+     * @param addressId
+     */
+    public void deleteUserAddress(String userId, String addressId);
+
+
+    /**
+     * 修改地址为默认地址
+     *
+     * @param userId
+     * @param addressId
+     */
+    public void updateUserAddressToBeDefault(String userId, String addressId);
+
+
+    /**
+     * 根据用户ID和地址ID，查询具体的用户地址对象信息
+     *
+     * @param userId
+     * @param addressId
+     * @return
+     */
+    public UserAddress queryUserAddress(String userId, String addressId);
+
 }
