@@ -15,4 +15,16 @@ public class BaseController {
     public static final Integer COMMENT_PAGE_SIZE = 10;
 
     public static final Integer PAGE_SIZE = 20;
+
+    public static final String FOODIE_SHOPCART = "shopcart";
+
+    /**
+     * 支付中心的地址URL，不过要收费，所以用不了，只能手动去更改数据库里的订单状态
+     */
+    String paymentUrl = "";
+
+    /**
+     * 支付回调接口，因为支付中心无法使用，所以配置了也没有意义。但需要注意的是：地址需要为外网地址，或者使用内网穿透
+     */
+    String payReturnUrl = "http://localhost:8088/orders/notifyMerchantOrderPaid";
 }
