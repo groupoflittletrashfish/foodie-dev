@@ -12,6 +12,7 @@ import com.imooc.pojo.vo.OrderVO;
 import com.imooc.service.AddressService;
 import com.imooc.service.ItemService;
 import com.imooc.service.OrderService;
+import com.imooc.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @program: foodie-dev
@@ -137,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+
     public void updateOrderStatus(String orderId, Integer orderStatus) {
         OrderStatus paidStatus = new OrderStatus();
         paidStatus.setOrderId(orderId);
@@ -149,5 +151,33 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderStatus queryOrderStatusInfo(String orderId) {
         return orderStatusMapper.selectByPrimaryKey(orderId);
+    }
+
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void closeOrder() {
+        //查询所有未支付的订单，判断时间是否超时（1天），超时则关闭交易
+        OrderStatus queryOrder = new OrderStatus();
+        queryOrder.setOrderStatus(OrderStatusEnum.WAIT_PAY.type);
+        List<OrderStatus> list = orderStatusMapper.select(queryOrder);
+        for (OrderStatus os : list) {
+            Date createTime = os.getCreatedTime();
+            int i = DateUtil.daysBetween(createTime, new Date());
+            if (i >= 1) {
+                //超过1天，关闭订单
+                doCloseOrder(os.getOrderId());
+            }
+        }
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    private void doCloseOrder(String orderId) {
+        OrderStatus close = new OrderStatus();
+        close.setOrderId(orderId);
+        close.setOrderStatus(OrderStatusEnum.CLOSE.type);
+        close.setCloseTime(new Date());
+        orderStatusMapper.updateByPrimaryKeySelective(close);
     }
 }
