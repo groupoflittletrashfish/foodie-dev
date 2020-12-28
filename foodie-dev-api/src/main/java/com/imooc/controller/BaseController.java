@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.io.File;
+
 /**
  * Created by Administrator on 2020/8/6.
  */
@@ -12,7 +14,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 public class BaseController {
 
-    public static final Integer COMMENT_PAGE_SIZE = 10;
+    public static final Integer COMMON_PAGE_SIZE = 10;
 
     public static final Integer PAGE_SIZE = 20;
 
@@ -27,4 +29,6 @@ public class BaseController {
      * 支付回调接口，因为支付中心无法使用，所以配置了也没有意义。但需要注意的是：地址需要为外网地址，或者使用内网穿透
      */
     String payReturnUrl = "http://localhost:8088/orders/notifyMerchantOrderPaid";
+
+    public static final String IMAGE_USER_FACE_LOCATION = File.separator + "workspaces" + File.separator + "images" + File.separator + "foodie" + File.separator + "faces";
 }
