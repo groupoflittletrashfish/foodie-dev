@@ -1,9 +1,13 @@
 package com.imooc.controller;
 
+import com.imooc.common.IMOOCJSONResult;
+import com.imooc.pojo.Orders;
+import com.imooc.service.center.MyOrdersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.Resource;
 import java.io.File;
 
 /**
@@ -13,6 +17,8 @@ import java.io.File;
 @ApiIgnore      //swagger忽略注解，被修饰的controller将不会显示在文档上
 @Slf4j
 public class BaseController {
+    @Resource
+    public MyOrdersService myOrdersService;
 
     public static final Integer COMMON_PAGE_SIZE = 10;
 
@@ -31,4 +37,18 @@ public class BaseController {
     String payReturnUrl = "http://localhost:8088/orders/notifyMerchantOrderPaid";
 
     public static final String IMAGE_USER_FACE_LOCATION = File.separator + "workspaces" + File.separator + "images" + File.separator + "foodie" + File.separator + "faces";
+
+
+    /**
+     * 用于验证用户和订单是否有关联关系，避免非法用户调用
+     *
+     * @return
+     */
+    public IMOOCJSONResult checkUserOrder(String userId, String orderId) {
+        Orders order = myOrdersService.queryMyOrder(userId, orderId);
+        if (order == null) {
+            return IMOOCJSONResult.errorMsg("订单不存在");
+        }
+        return IMOOCJSONResult.ok(order);
+    }
 }
