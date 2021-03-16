@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imooc.mapper.CategoryMapperCustom">
+
+    <resultMap id="myCategotyVO" type="com.imooc.pojo.vo.CategoryVO">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="father_id" property="fatherId" jdbcType="INTEGER"/>
+        <collection property="subCatList" ofType="com.imooc.pojo.vo.SubCategoryVO">
+            <id column="subId" property="subId" jdbcType="INTEGER"/>
+            <result column="subName" property="subName" jdbcType="VARCHAR"/>
+            <result column="subType" property="subType" jdbcType="INTEGER"/>
+            <result column="subFatherId" property="subFatherId" jdbcType="INTEGER"/>
+        </collection>
+    </resultMap>
+
+
+    <resultMap id="myNewItemVO" type="com.imooc.pojo.vo.NewItemsVO">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="rootCatId" property="rootCatId" jdbcType="INTEGER"/>
+        <result column="rootCatName" property="rootCatName" jdbcType="VARCHAR"/>
+        <result column="slogan" property="slogan" jdbcType="VARCHAR"/>
+        <result column="catImage" property="catImage" jdbcType="VARCHAR"/>
+        <result column="bgColor" property="bgColor" jdbcType="VARCHAR"/>
+        <collection property="simpleItemList" ofType="com.imooc.pojo.vo.SimpleItemVO">
+            <id column="itemId" property="itemId" jdbcType="VARCHAR"/>
+            <result column="itemName" property="itemName" jdbcType="VARCHAR"/>
+            <result column="itemUrl" property="itemUrl" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="getSubCatList" resultMap="myCategotyVO" parameterType="int">
+        SELECT
+            f.id,
+            f.`name`,
+            f.type,
+            f.father_id,
+            c.id        subId,
+            c.`name`    subName,
+            c.type      subType,
+            c.father_id subFatherId
+        FROM
+            category f
+            JOIN category c ON f.id = c.father_id
+        WHERE
+            f.father_id = #{rootCatId}
+    </select>
+
+
+    <select id="getSixNewItemsLazy" resultMap="myNewItemVO">
+        SELECT
+            f.id           rootCatId,
+            f.`name`       rootCatName,
+            f.slogan       slogan,
+            f.cat_image    catImage,
+            f.bg_color     bgColor,
+            i.id           itemId,
+            i.item_name    itemName,
+            ii.url         itemUrl,
+            i.created_time createdTime
+        FROM
+            category f
+            LEFT JOIN items i ON f.id = i.root_cat_id
+            LEFT JOIN items_img ii ON i.id = ii.item_id
+        WHERE
+            f.type = 1
+            AND i.root_cat_id = #{paramsMap.rootCatId}
+            AND ii.is_main = 1
+        ORDER BY
+            i.created_time DESC
+        LIMIT 0, 6
+    </select>
+</mapper>
