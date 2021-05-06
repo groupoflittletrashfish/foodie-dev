@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 /**
  * @program: foodie-dev
  * @description:
@@ -14,14 +17,23 @@ import springfox.documentation.annotations.ApiIgnore;
  * @create: 2021-01-05 13:46
  **/
 @RestController
-@RequestMapping("/hello")
 @ApiIgnore
 @Slf4j
 @Api(value = "测试用", tags = {"测试用"})
 public class HelloController {
 
-    @GetMapping("/world")
+    @GetMapping("/hello")
     public String hello() {
         return "hello world";
+    }
+
+
+    @GetMapping("setSession")
+    public Object setSession(HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        session.setAttribute("userInfo", "new user");
+        session.setMaxInactiveInterval(3600);
+        return "ok";
     }
 }

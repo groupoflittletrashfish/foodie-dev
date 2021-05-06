@@ -4,6 +4,7 @@ import com.imooc.common.IMOOCJSONResult;
 import com.imooc.controller.BaseController;
 import com.imooc.pojo.Users;
 import com.imooc.pojo.bo.center.CenterUserBO;
+import com.imooc.pojo.vo.UsersVO;
 import com.imooc.resource.FileUpload;
 import com.imooc.service.center.CenterUserService;
 import com.imooc.util.CookieUtils;
@@ -59,8 +60,12 @@ public class CenterUserController extends BaseController {
             return IMOOCJSONResult.errorMap(errorMap);
         }
         Users userResult = centerUserService.updateUserInfo(userId, centerUserBO);
-        setNull(userResult);
-        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(userResult), true);
+//        setNull(userResult);
+        UsersVO usersVO = conventUsersVO(userResult);
+
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO), true);
+
+
         return IMOOCJSONResult.ok();
     }
 
@@ -122,8 +127,9 @@ public class CenterUserController extends BaseController {
         String finalUserFaceUrl = imageServerUrl + uploadPathPrefix + "?t=" + DateUtil.getCurrentDateString(DateUtil.DATE_PATTERN);
         //更新用户头像到数据库
         Users userResult = centerUserService.updateUserFace(userId, finalUserFaceUrl);
-        userResult = setNull(userResult);
-        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(userResult), true);
+//        userResult = setNull(userResult);
+        UsersVO usersVO = conventUsersVO(userResult);
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO), true);
         return IMOOCJSONResult.ok();
     }
 

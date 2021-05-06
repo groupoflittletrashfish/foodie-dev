@@ -18,6 +18,8 @@ spring:
     multipart:
       max-file-size: 512000     #文件上传大小限制为500KB
       max-request-size: 512000  #请求大小限制为500KB
+  session:
+    store-type: redis
 mybatis:
   type-aliases-package: com.noname.mapper
   mapper-locations: classpath:/mapper/*.xml

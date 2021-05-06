@@ -70,8 +70,8 @@ public class OrdersController extends BaseController {
         //2.创建订单以后移除购物车中已结算的商品
         //清理覆盖现有redis汇总的购物车数据
         shopcartList.removeAll(orderVO.getToBeRemoveShopCartList());
-        redisOperator.set(FOODIE_SHOPCART, JsonUtils.objectToJson(shopcartList));
-        CookieUtils.setCookie(request, response, FOODIE_SHOPCART, "", true);
+        redisOperator.set(FOODIE_SHOPCART + ":" + submitOrderBO.getUserId(), JsonUtils.objectToJson(shopcartList));
+        CookieUtils.setCookie(request, response, FOODIE_SHOPCART, JsonUtils.objectToJson(shopcartList), true);
         //3.向支付中心发送当前订单，用于保存支付中心的订单
         MerchantOrdersVO merchantOrdersVO = orderVO.getMerchantOrdersVO();
         merchantOrdersVO.setReturnUrl(payReturnUrl);    //回调函数，等支付中心订单完成后调用该地址并将订单状态更新为已付款

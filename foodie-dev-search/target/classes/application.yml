@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://192.168.222.145:3306/foodie-shop-dev?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    type: com.zaxxer.hikari.HikariDataSource    #使用springboot推荐的hikara连接池
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+  redis:
+    database: 0
+    host: 192.168.222.145
+    port: 6379
+    password: noname
+  data:
+    elasticsearch:
+      cluster-nodes: 192.168.222.145:9300   #注意此处使用的是9300端口，即长连接通讯的端口，不是9200.如果是集群则可以用逗号分隔
+      cluster-name: imooc-es-cluster

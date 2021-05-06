@@ -85,8 +85,8 @@ public class OrderServiceImpl implements OrderService {
         Integer realPayAmount = 0;  //优惠后的实际支付价格累计
         List<ShopCartBO> toBeRemoveShopCartList = new ArrayList<>();
         for (String itemSpecId : itemSpecIdArr) {
-            //整合redis后，商品的购买数据重新从redis的购物车中获取
             ShopCartBO cartItem = getBuyCountsFromShopcart(shopCartList, itemSpecId);
+            // 整合redis后，商品购买的数量重新从redis的购物车中获取
             int buyCounts = cartItem.getBuyCounts();
             toBeRemoveShopCartList.add(cartItem);
 
