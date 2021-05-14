@@ -11,7 +11,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 /**
  * Created by Administrator on 2020/8/6.
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class Application {
 
     public static void main(String[] args) {
