@@ -1,0 +1,37 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource    #使用springboot推荐的hikara连接池
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 600000
+      pool-name: DataSourceHikariCP   #连接池名称
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+  servlet:
+    multipart:
+      max-file-size: 512000     #文件上传大小限制为500KB
+      max-request-size: 512000  #请求大小限制为500KB
+  session:
+    store-type: redis
+mybatis:
+  type-aliases-package: com.noname.mapper
+  mapper-locations: classpath:/mapper/*.xml
+server:
+  port: 8088
+  tomcat:
+    uri-encoding: UTF-8
+    max-http-header-size: 80KB
+mapper:
+  mappers: com.imooc.my.mapper.MyMapper
+  not-empty: false
+  identity: MYSQL
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true

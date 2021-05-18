@@ -1,0 +1,35 @@
+server:
+  port: 8066
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://192.168.222.145:3306/foodie-shop-dev?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    type: com.zaxxer.hikari.HikariDataSource    #使用springboot推荐的hikara连接池
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+  redis:
+    database: 0
+    host: 192.168.222.145
+    port: 6379
+    password: noname
+  data:
+    elasticsearch:
+      cluster-nodes: 192.168.222.145:9300   #注意此处使用的是9300端口，即长连接通讯的端口，不是9200.如果是集群则可以用逗号分隔
+      cluster-name: imooc-es-cluster
+mybatis:
+  type-aliases-package: com.noname.mapper
+  mapper-locations: classpath:/mapper/*.xml
+mapper:
+  mappers: com.imooc.my.mapper.MyMapper
+  not-empty: false
+  identity: MYSQL
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+#fdfs配置文件
+fdfs:
+  connect-timeout: 30   #连接超时时间
+  so-timeout: 30        #读取超时时间
+  tracker-list: 192.168.222.145:22122     #tracker服务的ip和端口

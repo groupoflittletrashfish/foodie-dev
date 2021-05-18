@@ -1,10 +1,12 @@
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\config\OrderJob.java
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\controller\BaseController.java
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\controller\ShopCatController.java
+D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\config\RedisConfig.java
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\controller\AddressController.java
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\controller\center\MyOrdersController.java
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\config\Swagger2.java
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\controller\center\MyCommentController.java
+D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\controller\intercepter\UserTokenIntercepter.java
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\controller\ItemsController.java
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\Application.java
 D:\ideaspace2\foodie-dev\foodie-dev-api\src\main\java\com\imooc\aspect\ServiceLogAspect.java

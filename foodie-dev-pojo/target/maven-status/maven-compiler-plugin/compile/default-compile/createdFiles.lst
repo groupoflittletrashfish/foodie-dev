@@ -1,6 +1,7 @@
 com\imooc\pojo\OrderStatus.class
 com\imooc\pojo\bo\UserBO.class
 com\imooc\pojo\Carousel.class
+com\imooc\pojo\vo\UsersVO.class
 com\imooc\pojo\bo\AddressBO.class
 com\imooc\pojo\OrderItems.class
 com\imooc\pojo\vo\CategoryVO.class
