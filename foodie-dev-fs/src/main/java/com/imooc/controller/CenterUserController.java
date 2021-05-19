@@ -1,7 +1,13 @@
 package com.imooc.controller;
 
 import com.imooc.common.IMOOCJSONResult;
+import com.imooc.pojo.Users;
+import com.imooc.pojo.vo.UsersVO;
+import com.imooc.resource.FileResource;
 import com.imooc.service.FdfsService;
+import com.imooc.service.center.CenterUserService;
+import com.imooc.util.CookieUtils;
+import com.imooc.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,14 +29,19 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("fdfs")
-public class CenterUserController {
+public class CenterUserController extends BaseController {
 
     @Resource
     private FdfsService fdfsService;
+    @Resource
+    private FileResource fileResource;
+    @Resource
+    private CenterUserService centerUserService;
 
     @PostMapping("uploadFace")
     public IMOOCJSONResult uploadFace(@RequestParam("userId") String userId, MultipartFile file, HttpServletRequest request,
                                       HttpServletResponse response) throws Exception {
+        String path = null;
         if (file != null) {
             //获取文件上传的名称
             String fileName = file.getOriginalFilename();
@@ -43,10 +54,18 @@ public class CenterUserController {
                     return IMOOCJSONResult.errorMsg("图片格式不正确!");
                 }
 
-                String path = fdfsService.upload(file, suffix);
+                path = fdfsService.upload(file, suffix);
                 System.out.println(path);
             } else {
                 return IMOOCJSONResult.errorMsg("文件不能为空");
+            }
+            if (StringUtils.isNotBlank(path)) {
+                String finalUserFaceUrl = fileResource.getHost() + path;
+                Users userResult = centerUserService.updateUserFace(userId, finalUserFaceUrl);
+                UsersVO usersVO = conventUsersVO(userResult);
+                CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO), true);
+            } else {
+                return IMOOCJSONResult.errorMsg("上传头像失败");
             }
         }
         return IMOOCJSONResult.ok();

@@ -18,6 +18,10 @@ spring:
     elasticsearch:
       cluster-nodes: 192.168.222.145:9300   #注意此处使用的是9300端口，即长连接通讯的端口，不是9200.如果是集群则可以用逗号分隔
       cluster-name: imooc-es-cluster
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 10MB
 mybatis:
   type-aliases-package: com.noname.mapper
   mapper-locations: classpath:/mapper/*.xml
